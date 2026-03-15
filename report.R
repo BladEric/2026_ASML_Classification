@@ -16,11 +16,9 @@ set.seed(2026)
 # 假设源文件 bank_personal_loan.csv 与脚本在同一目录下
 loan_data <- read.csv("bank_personal_loan.csv")
 
-# 3. 数据预处理 (Data Preprocessing)
-# - 移除 ID 和 ZIP Code，因为对于一般分类树/回归模型来说，不具备泛化意义
-# - 将分类变量转换为 Factor 类型
+# 3. 数据预处理 (Data Preprocessing) - 已修复没有 ID 列的问题
 clean_data <- loan_data %>%
-  select(-ID, -ZIP.Code) %>%
+  select(-ZIP.Code) %>%  # 现在我们只移除毫无预测价值的邮政编码列
   mutate(
     Personal.Loan = factor(Personal.Loan, levels = c(0, 1), labels = c("No", "Yes")),
     Education = factor(Education, levels = c(1, 2, 3), labels = c("Undergrad", "Graduate", "Advanced")),
@@ -30,8 +28,8 @@ clean_data <- loan_data %>%
     CreditCard = factor(CreditCard)
   )
 
-# 检查是否有缺失值
-sum(is.na(clean_data)) # 如果是0，说明数据很干净
+# 检查一下前几行，确保数据正确转换了
+head(clean_data)
 
 # 4. 简单数据可视化 (EDA - Part 2 要求)
 # 图 1: 收入与是否贷款的关系 (箱线图)
