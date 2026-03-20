@@ -3,22 +3,20 @@
 # =====================================================================
 
 # 1. 加载必要的 R 包
-# 如果没有安装，请先运行: install.packages(c("tidyverse", "caret", "randomForest", "pROC"))
 library(tidyverse)
 library(caret)
 library(randomForest)
 library(pROC)
 
-# 固定随机种子，确保报告结果可完全复现 (作业要求)
+# 固定随机种子
 set.seed(2026) 
 
 # 2. 读取数据
-# 假设源文件 bank_personal_loan.csv 与脚本在同一目录下
 loan_data <- read.csv("bank_personal_loan.csv")
 
-# 3. 数据预处理 (Data Preprocessing) - 已修复没有 ID 列的问题
+# 3. 数据预处理 (Data Preprocessing)
 clean_data <- loan_data %>%
-  select(-ZIP.Code) %>%  # 现在我们只移除毫无预测价值的邮政编码列
+  select(-ZIP.Code) %>% 
   mutate(
     Personal.Loan = factor(Personal.Loan, levels = c(0, 1), labels = c("No", "Yes")),
     Education = factor(Education, levels = c(1, 2, 3), labels = c("Undergrad", "Graduate", "Advanced")),
@@ -28,10 +26,10 @@ clean_data <- loan_data %>%
     CreditCard = factor(CreditCard)
   )
 
-# 检查一下前几行，确保数据正确转换了
+# 检查
 head(clean_data)
 
-# 4. 简单数据可视化 (EDA - Part 2 要求)
+# 4. 简单数据可视化
 # 图 1: 收入与是否贷款的关系 (箱线图)
 p1 <- ggplot(clean_data, aes(x = Personal.Loan, y = Income, fill = Personal.Loan)) +
   geom_boxplot() +
